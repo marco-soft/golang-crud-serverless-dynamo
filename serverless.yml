@@ -1,0 +1,33 @@
+service: jubla-crud-forms-go
+
+provider:
+  name: aws
+  runtime: go1.x
+  tracing:
+    apiGateway: true
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - xray:PutTraceSegments
+            - xray:PutTelemetryRecords
+          Resource: "*"
+
+functions:
+  create:
+    handler: form/create
+    events:
+      - httpApi:
+          path: /form
+          method: post
+
+
+package:
+  patterns:
+    - ./bin/**
