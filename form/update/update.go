@@ -16,49 +16,53 @@ import (
 	"time"
 )
 
+// aws config
+var region = "us-east-1"
+var formsTable = "jubla-forms-responses"
+
+// Form to receive, is map because is dynamic
+type Form map[string]interface{}
+
+// method to update a item of dynamodb forms table
 func updateItem(item Form) (*dynamodb.UpdateItemOutput, error) {
 
 	cfg, err := config.LoadDefaultConfig(context.TODO(), func(opts *config.LoadOptions) error {
-		opts.Region = "us-east-1"
+		opts.Region = region
 		return nil
 	})
 
 	if err != nil {
+		log.Printf("ERROR ON updateItem METHOD: %s", err)
 		panic(err)
 	}
 
 	svc := dynamodb.NewFromConfig(cfg)
-	log.Printf("ITEM: %s", item)
 
 	primaryKey := map[string]string{
 		"form": item["form"].(string),
 		"type": item["type"].(string),
 	}
 
-	log.Printf("ITEM 2: %s", item)
-
 	pk, err := attributevalue.MarshalMap(primaryKey)
 
 	upd := expression.Set(expression.Name("updatedAt"), expression.Value(time.Now()))
 	for key, element := range item {
 		if key != "form" && key != "type" {
-			log.Printf("FORM: %s, %s", key, element)
 			upd.Set(expression.Name(key), expression.Value(element))
 		}
 	}
-	log.Printf("DYNAMODB KEY: %s", upd)
-
 	expr, err := expression.NewBuilder().WithUpdate(upd).Build()
 
 	out, err := svc.UpdateItem(context.TODO(), &dynamodb.UpdateItemInput{
 		Key:                       pk,
-		TableName:                 aws.String("jubla-forms-responses"),
+		TableName:                 aws.String(formsTable),
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		UpdateExpression:          expr.Update(),
 	})
 
 	if err != nil {
+		log.Printf("ERROR ON updateItem METHOD: %s", err)
 		return nil, fmt.Errorf("TrasnacitonWrite: %v\n", err)
 	}
 
@@ -67,11 +71,9 @@ func updateItem(item Form) (*dynamodb.UpdateItemOutput, error) {
 
 type Response events.APIGatewayProxyResponse
 
-type Form map[string]interface{}
-
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 
-	ctx, seg := xray.BeginSubsegment(ctx, "MY-CUSTOM-SEGMENT")
+	ctx, seg := xray.BeginSubsegment(ctx, "UPDATE-FORM-SEGMENT")
 	seg.AddMetadata("BODY", request.Body)
 
 	log.Printf("REQUEST BODY: %s", request.Body)
@@ -79,7 +81,8 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	var form Form
 	json.Unmarshal([]byte(request.Body), &form)
 
-	_, err := updateItem(form)
+	out, err := updateItem(form)
+	log.Printf("UPDATE ITEM OUTPUT: %s", out)
 
 	if err != nil {
 		log.Fatalf("LoadDefaultConfig: %v\n", err)
@@ -93,7 +96,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	resp := Response{
 		StatusCode:      200,
 		IsBase64Encoded: false,
-		Body:            "Successfully created!",
+		Body:            "Successfully updated!",
 		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
