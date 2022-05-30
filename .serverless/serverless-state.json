@@ -21,6 +21,8 @@
                 "dynamodb:Scan",
                 "dynamodb:GetItem",
                 "dynamodb:PutItem",
+                "dynamodb:DeleteItem",
+                "dynamodb:UpdateItem",
                 "xray:PutTraceSegments",
                 "xray:PutTelemetryRecords"
               ],
@@ -109,6 +111,18 @@
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
               "LogGroupName": "/aws/lambda/jubla-crud-forms-go-dev-create"
+            }
+          },
+          "DeleteLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/jubla-crud-forms-go-dev-delete"
+            }
+          },
+          "UpdateLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/jubla-crud-forms-go-dev-update"
             }
           },
           "IamRoleLambdaExecution": {
@@ -208,9 +222,9 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/jubla-crud-forms-go/dev/1653849302557-2022-05-29T18:35:02.557Z/jubla-crud-forms-go.zip"
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
               },
-              "Handler": "form/create",
+              "Handler": "bin/create",
               "Runtime": "go1.x",
               "FunctionName": "jubla-crud-forms-go-dev-create",
               "MemorySize": 1024,
@@ -229,14 +243,90 @@
               "CreateLogGroup"
             ]
           },
-          "CreateLambdaVersionAyqDNtXxQU8PH8S7fwurp9X1XofQBGrJPSpeaErJzs": {
+          "DeleteLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
+              },
+              "Handler": "bin/delete",
+              "Runtime": "go1.x",
+              "FunctionName": "jubla-crud-forms-go-dev-delete",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "TracingConfig": {
+                "Mode": "Active"
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "DeleteLogGroup"
+            ]
+          },
+          "UpdateLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
+              },
+              "Handler": "bin/update",
+              "Runtime": "go1.x",
+              "FunctionName": "jubla-crud-forms-go-dev-update",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "TracingConfig": {
+                "Mode": "Active"
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "UpdateLogGroup"
+            ]
+          },
+          "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateLambdaFunction"
               },
-              "CodeSha256": "a6S+xBgDyVoMy4MEvapH6ubpt3PJ/gPqGBjQZyBrceY="
+              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
+            }
+          },
+          "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "DeleteLambdaFunction"
+              },
+              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
+            }
+          },
+          "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "UpdateLambdaFunction"
+              },
+              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
             }
           },
           "HttpApi": {
@@ -330,6 +420,150 @@
               }
             },
             "DependsOn": "HttpApiIntegrationCreate"
+          },
+          "DeleteLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "DeleteLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationDelete": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"DeleteLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRouteDeleteForm": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "DELETE /form",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationDelete"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationDelete"
+          },
+          "UpdateLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "UpdateLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationUpdate": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"UpdateLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRoutePutForm": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "PUT /form",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationUpdate"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationUpdate"
           }
         },
         "Outputs": {
@@ -344,10 +578,28 @@
           "CreateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateLambdaVersionAyqDNtXxQU8PH8S7fwurp9X1XofQBGrJPSpeaErJzs"
+              "Ref": "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w"
             },
             "Export": {
               "Name": "sls-jubla-crud-forms-go-dev-CreateLambdaFunctionQualifiedArn"
+            }
+          },
+          "DeleteLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U"
+            },
+            "Export": {
+              "Name": "sls-jubla-crud-forms-go-dev-DeleteLambdaFunctionQualifiedArn"
+            }
+          },
+          "UpdateLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ"
+            },
+            "Export": {
+              "Name": "sls-jubla-crud-forms-go-dev-UpdateLambdaFunctionQualifiedArn"
             }
           },
           "HttpApiId": {
@@ -473,7 +725,7 @@
     "pluginsData": {},
     "functions": {
       "create": {
-        "handler": "form/create",
+        "handler": "bin/create",
         "events": [
           {
             "httpApi": {
@@ -490,7 +742,47 @@
         "timeout": 6,
         "runtime": "go1.x",
         "vpc": {},
-        "versionLogicalId": "CreateLambdaVersionAyqDNtXxQU8PH8S7fwurp9X1XofQBGrJPSpeaErJzs"
+        "versionLogicalId": "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w"
+      },
+      "delete": {
+        "handler": "bin/delete",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/form",
+              "method": "delete"
+            },
+            "resolvedMethod": "DELETE",
+            "resolvedPath": "/form"
+          }
+        ],
+        "name": "jubla-crud-forms-go-dev-delete",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "go1.x",
+        "vpc": {},
+        "versionLogicalId": "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U"
+      },
+      "update": {
+        "handler": "bin/update",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/form",
+              "method": "put"
+            },
+            "resolvedMethod": "PUT",
+            "resolvedPath": "/form"
+          }
+        ],
+        "name": "jubla-crud-forms-go-dev-update",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "go1.x",
+        "vpc": {},
+        "versionLogicalId": "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ"
       }
     },
     "configValidationMode": "warn",
@@ -509,7 +801,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/jubla-crud-forms-go/dev/code-artifacts",
         "artifact": "/Users/marcogarofalocervantes/Documents/exercises/jubla-crud-forms-go/.serverless/jubla-crud-forms-go.zip",
-        "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653849302557-2022-05-29T18:35:02.557Z"
+        "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z"
       }
     },
     "layers": {},
@@ -517,7 +809,7 @@
     "artifact": "/Users/marcogarofalocervantes/Documents/exercises/jubla-crud-forms-go/.serverless/jubla-crud-forms-go.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653849302557-2022-05-29T18:35:02.557Z",
+    "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z",
     "artifact": "jubla-crud-forms-go.zip"
   }
 }

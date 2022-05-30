@@ -4,16 +4,17 @@ go 1.18
 
 require (
 	github.com/aws/aws-lambda-go v1.32.0
+	github.com/aws/aws-sdk-go v1.17.12
 	github.com/aws/aws-sdk-go-v2 v1.16.4
 	github.com/aws/aws-sdk-go-v2/config v1.15.8
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue v1.9.2
+	github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression v1.4.8
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.5
 	github.com/aws/aws-xray-sdk-go v1.7.0
 )
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/aws/aws-sdk-go v1.17.12 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.12.3 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.12.5 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.11 // indirect

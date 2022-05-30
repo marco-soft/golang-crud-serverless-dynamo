@@ -15,18 +15,31 @@ provider:
             - dynamodb:Scan
             - dynamodb:GetItem
             - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:UpdateItem
             - xray:PutTraceSegments
             - xray:PutTelemetryRecords
           Resource: "*"
 
 functions:
   create:
-    handler: form/create
+    handler: bin/create
     events:
       - httpApi:
           path: /form
           method: post
-
+  delete:
+    handler: bin/delete
+    events:
+      - httpApi:
+          path: /form
+          method: delete
+  update:
+    handler: bin/update
+    events:
+      - httpApi:
+          path: /form
+          method: put
 
 package:
   patterns:
