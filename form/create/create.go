@@ -66,7 +66,8 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 
 	var form Form
 	json.Unmarshal([]byte(request.Body), &form)
-	form["type"] = time.Now()
+	form["type"] = "response"
+	form["createdAt"] = time.Now()
 
 	err := insertItem(form)
 
