@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
+	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 	"github.com/aws/aws-xray-sdk-go/xray"
 	"log"
@@ -34,20 +35,27 @@ func getAllItems() ([]Form, error) {
 		log.Printf("ERROR ON getAllItems METHOD: %s", err)
 		panic(err)
 	}
+	filter := expression.Name("type").Equal(expression.Value("response"))
+	expr, err := expression.NewBuilder().WithFilter(filter).Build()
+	if err != nil {
+		log.Printf("ERROR ON getAllItems METHOD: %s", err)
+		fmt.Println("Got error building expression:")
+		fmt.Println(err.Error())
+		return nil, nil
+	}
 
 	svc := dynamodb.NewFromConfig(cfg)
 
 	data, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
-		TableName: aws.String("jubla-forms-responses"),
+		TableName:                 aws.String(formsTable),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
 	})
-	if err != nil {
-		log.Printf("ERROR ON insertInput METHOD: %s", err)
-		return items, fmt.Errorf("Query: %v\n", err)
-	}
 
 	err = attributevalue.UnmarshalListOfMaps(data.Items, &items)
+
 	if err != nil {
-		log.Printf("ERROR ON insertInput METHOD: %s", err)
 		return items, fmt.Errorf("UnmarshalListOfMaps: %v\n", err)
 	}
 
