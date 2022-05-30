@@ -15,13 +15,22 @@ import (
 	"time"
 )
 
-func insertItem(item Form) error {
+// aws config
+var region = "us-east-1"
+var formsTable = "jubla-forms-responses"
 
+// Form to receive, is map because is dynamic
+type Form map[string]interface{}
+
+// method to insert a form item to dynamodb
+func insertItem(item Form) error {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), func(opts *config.LoadOptions) error {
-		opts.Region = "us-east-1"
+		opts.Region = region
 		return nil
 	})
+
 	if err != nil {
+		log.Printf("ERROR ON insertInput METHOD: %s", err)
 		panic(err)
 	}
 
@@ -34,20 +43,12 @@ func insertItem(item Form) error {
 	}
 
 	_, err = svc.PutItem(context.TODO(), &dynamodb.PutItemInput{
-		TableName: aws.String("jubla-forms-responses"),
+		TableName: aws.String(formsTable),
 		Item:      data,
 	})
 
 	if err != nil {
-		log.Printf("I am an error: %s", err)
-		// create the input configuration instance
-		input := &dynamodb.ListTablesInput{}
-		result, err2 := svc.ListTables(context.TODO(), input)
-		if err2 != nil {
-			log.Printf("I am an error in list tables: %s", err2)
-		} else {
-			log.Printf("This is the tables: %s", result)
-		}
+		log.Printf("ERROR ON insertInput METHOD: %s", err)
 		return fmt.Errorf("PutItem: %v\n", err)
 	}
 
@@ -56,18 +57,15 @@ func insertItem(item Form) error {
 
 type Response events.APIGatewayProxyResponse
 
-type Form map[string]interface{}
-
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 
-	ctx, seg := xray.BeginSubsegment(ctx, "MY-CUSTOM-SEGMENT")
-	seg.AddMetadata("BODY", request.Body)
+	ctx, seg := xray.BeginSubsegment(ctx, "CREATE-FORM-SEGMENT")
 
+	seg.AddMetadata("BODY", request.Body)
 	log.Printf("REQUEST BODY: %s", request.Body)
 
 	var form Form
 	json.Unmarshal([]byte(request.Body), &form)
-
 	form["type"] = time.Now()
 
 	err := insertItem(form)
