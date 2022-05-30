@@ -19,7 +19,7 @@ provider:
             - dynamodb:UpdateItem
             - xray:PutTraceSegments
             - xray:PutTelemetryRecords
-          Resource: "*"
+          Resource: "arn:aws:dynamodb:us-east-1:582589677455:table/jubla-forms-responses"
 
 functions:
   read:
