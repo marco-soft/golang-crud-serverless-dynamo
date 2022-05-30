@@ -14,16 +14,24 @@ import (
 	"log"
 )
 
-func getAllItems() ([]Form, error) {
+// aws config
+var region = "us-east-1"
+var formsTable = "jubla-forms-responses"
 
+// Form to receive, is map because is dynamic
+type Form map[string]interface{}
+
+// method to get all items from dynamodb forms table
+func getAllItems() ([]Form, error) {
 	var items []Form
 
 	cfg, err := config.LoadDefaultConfig(context.TODO(), func(opts *config.LoadOptions) error {
-		opts.Region = "us-east-1"
+		opts.Region = region
 		return nil
 	})
 
 	if err != nil {
+		log.Printf("ERROR ON getAllItems METHOD: %s", err)
 		panic(err)
 	}
 
@@ -33,11 +41,13 @@ func getAllItems() ([]Form, error) {
 		TableName: aws.String("jubla-forms-responses"),
 	})
 	if err != nil {
+		log.Printf("ERROR ON insertInput METHOD: %s", err)
 		return items, fmt.Errorf("Query: %v\n", err)
 	}
 
 	err = attributevalue.UnmarshalListOfMaps(data.Items, &items)
 	if err != nil {
+		log.Printf("ERROR ON insertInput METHOD: %s", err)
 		return items, fmt.Errorf("UnmarshalListOfMaps: %v\n", err)
 	}
 
@@ -46,14 +56,10 @@ func getAllItems() ([]Form, error) {
 
 type Response events.APIGatewayProxyResponse
 
-type Form map[string]interface{}
-
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 
-	ctx, seg := xray.BeginSubsegment(ctx, "MY-CUSTOM-SEGMENT")
-	seg.AddMetadata("BODY", request.Body)
-
-	log.Printf("REQUEST BODY: %s", request.Body)
+	ctx, seg := xray.BeginSubsegment(ctx, "READ-FORMS-SEGMENT")
+	seg.AddMetadata("BODY", request)
 
 	var form Form
 	json.Unmarshal([]byte(request.Body), &form)
