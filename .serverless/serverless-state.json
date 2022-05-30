@@ -107,6 +107,12 @@
               }
             }
           },
+          "ReadLogGroup": {
+            "Type": "AWS::Logs::LogGroup",
+            "Properties": {
+              "LogGroupName": "/aws/lambda/jubla-crud-forms-go-dev-read"
+            }
+          },
           "CreateLogGroup": {
             "Type": "AWS::Logs::LogGroup",
             "Properties": {
@@ -215,6 +221,34 @@
               }
             }
           },
+          "ReadLambdaFunction": {
+            "Type": "AWS::Lambda::Function",
+            "Properties": {
+              "Code": {
+                "S3Bucket": {
+                  "Ref": "ServerlessDeploymentBucket"
+                },
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z/jubla-crud-forms-go.zip"
+              },
+              "Handler": "bin/read",
+              "Runtime": "go1.x",
+              "FunctionName": "jubla-crud-forms-go-dev-read",
+              "MemorySize": 1024,
+              "Timeout": 6,
+              "TracingConfig": {
+                "Mode": "Active"
+              },
+              "Role": {
+                "Fn::GetAtt": [
+                  "IamRoleLambdaExecution",
+                  "Arn"
+                ]
+              }
+            },
+            "DependsOn": [
+              "ReadLogGroup"
+            ]
+          },
           "CreateLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -222,7 +256,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z/jubla-crud-forms-go.zip"
               },
               "Handler": "bin/create",
               "Runtime": "go1.x",
@@ -250,7 +284,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z/jubla-crud-forms-go.zip"
               },
               "Handler": "bin/delete",
               "Runtime": "go1.x",
@@ -278,7 +312,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z/jubla-crud-forms-go.zip"
+                "S3Key": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z/jubla-crud-forms-go.zip"
               },
               "Handler": "bin/update",
               "Runtime": "go1.x",
@@ -299,34 +333,44 @@
               "UpdateLogGroup"
             ]
           },
-          "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w": {
+          "ReadLambdaVersion5vqrB4DGqqFZWihlu4iOdVpKZIPQui73g1SzlGNo": {
+            "Type": "AWS::Lambda::Version",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+              "FunctionName": {
+                "Ref": "ReadLambdaFunction"
+              },
+              "CodeSha256": "S8voJchg+pBXGGq3cWbgG6sAGmOLig/mmAbYz0dkRlw="
+            }
+          },
+          "CreateLambdaVersionOfLdhC3ScYZjQHQ989elSwjEIiXUd6B9GgwqqPwRvOI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "CreateLambdaFunction"
               },
-              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
+              "CodeSha256": "S8voJchg+pBXGGq3cWbgG6sAGmOLig/mmAbYz0dkRlw="
             }
           },
-          "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U": {
+          "DeleteLambdaVersionAgbrcj7O8RiG3NQ5HfxT0Dx4MGcrDz5K7OXs6IkWJM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "DeleteLambdaFunction"
               },
-              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
+              "CodeSha256": "S8voJchg+pBXGGq3cWbgG6sAGmOLig/mmAbYz0dkRlw="
             }
           },
-          "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ": {
+          "UpdateLambdaVersion9U2BWmXO34ZU6WI44vMHVQAozqYvfI4WaY5sNpN24E": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UpdateLambdaFunction"
               },
-              "CodeSha256": "Hu1BbcbtO25Oc9YTQJEPmXwYW9JPn7ScZByB5BTrgSQ="
+              "CodeSha256": "S8voJchg+pBXGGq3cWbgG6sAGmOLig/mmAbYz0dkRlw="
             }
           },
           "HttpApi": {
@@ -348,6 +392,78 @@
                 "DetailedMetricsEnabled": false
               }
             }
+          },
+          "ReadLambdaPermissionHttpApi": {
+            "Type": "AWS::Lambda::Permission",
+            "Properties": {
+              "FunctionName": {
+                "Fn::GetAtt": [
+                  "ReadLambdaFunction",
+                  "Arn"
+                ]
+              },
+              "Action": "lambda:InvokeFunction",
+              "Principal": "apigateway.amazonaws.com",
+              "SourceArn": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:",
+                    {
+                      "Ref": "AWS::Partition"
+                    },
+                    ":execute-api:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    "/*"
+                  ]
+                ]
+              }
+            }
+          },
+          "HttpApiIntegrationRead": {
+            "Type": "AWS::ApiGatewayV2::Integration",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "IntegrationType": "AWS_PROXY",
+              "IntegrationUri": {
+                "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"ReadLambdaPermissionHttpApi\"][\"Properties\"][\"FunctionName\"]"
+              },
+              "PayloadFormatVersion": "2.0",
+              "TimeoutInMillis": 6500
+            }
+          },
+          "HttpApiRouteGetForm": {
+            "Type": "AWS::ApiGatewayV2::Route",
+            "Properties": {
+              "ApiId": {
+                "Ref": "HttpApi"
+              },
+              "RouteKey": "GET /form",
+              "Target": {
+                "Fn::Join": [
+                  "/",
+                  [
+                    "integrations",
+                    {
+                      "Ref": "HttpApiIntegrationRead"
+                    }
+                  ]
+                ]
+              }
+            },
+            "DependsOn": "HttpApiIntegrationRead"
           },
           "CreateLambdaPermissionHttpApi": {
             "Type": "AWS::Lambda::Permission",
@@ -575,10 +691,19 @@
               "Name": "sls-jubla-crud-forms-go-dev-ServerlessDeploymentBucketName"
             }
           },
+          "ReadLambdaFunctionQualifiedArn": {
+            "Description": "Current Lambda function version",
+            "Value": {
+              "Ref": "ReadLambdaVersion5vqrB4DGqqFZWihlu4iOdVpKZIPQui73g1SzlGNo"
+            },
+            "Export": {
+              "Name": "sls-jubla-crud-forms-go-dev-ReadLambdaFunctionQualifiedArn"
+            }
+          },
           "CreateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w"
+              "Ref": "CreateLambdaVersionOfLdhC3ScYZjQHQ989elSwjEIiXUd6B9GgwqqPwRvOI"
             },
             "Export": {
               "Name": "sls-jubla-crud-forms-go-dev-CreateLambdaFunctionQualifiedArn"
@@ -587,7 +712,7 @@
           "DeleteLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U"
+              "Ref": "DeleteLambdaVersionAgbrcj7O8RiG3NQ5HfxT0Dx4MGcrDz5K7OXs6IkWJM"
             },
             "Export": {
               "Name": "sls-jubla-crud-forms-go-dev-DeleteLambdaFunctionQualifiedArn"
@@ -596,7 +721,7 @@
           "UpdateLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ"
+              "Ref": "UpdateLambdaVersion9U2BWmXO34ZU6WI44vMHVQAozqYvfI4WaY5sNpN24E"
             },
             "Export": {
               "Name": "sls-jubla-crud-forms-go-dev-UpdateLambdaFunctionQualifiedArn"
@@ -724,6 +849,26 @@
     },
     "pluginsData": {},
     "functions": {
+      "read": {
+        "handler": "bin/read",
+        "events": [
+          {
+            "httpApi": {
+              "path": "/form",
+              "method": "get"
+            },
+            "resolvedMethod": "GET",
+            "resolvedPath": "/form"
+          }
+        ],
+        "name": "jubla-crud-forms-go-dev-read",
+        "package": {},
+        "memory": 1024,
+        "timeout": 6,
+        "runtime": "go1.x",
+        "vpc": {},
+        "versionLogicalId": "ReadLambdaVersion5vqrB4DGqqFZWihlu4iOdVpKZIPQui73g1SzlGNo"
+      },
       "create": {
         "handler": "bin/create",
         "events": [
@@ -742,7 +887,7 @@
         "timeout": 6,
         "runtime": "go1.x",
         "vpc": {},
-        "versionLogicalId": "CreateLambdaVersion83bd4mV9DKQuWLaUYIwbiBrY8BOYT9gekPIFi1Y8w"
+        "versionLogicalId": "CreateLambdaVersionOfLdhC3ScYZjQHQ989elSwjEIiXUd6B9GgwqqPwRvOI"
       },
       "delete": {
         "handler": "bin/delete",
@@ -762,7 +907,7 @@
         "timeout": 6,
         "runtime": "go1.x",
         "vpc": {},
-        "versionLogicalId": "DeleteLambdaVersionmUperwC4rerzBh7Y5YX7V1arN7DJOS0noSzgkLf7U"
+        "versionLogicalId": "DeleteLambdaVersionAgbrcj7O8RiG3NQ5HfxT0Dx4MGcrDz5K7OXs6IkWJM"
       },
       "update": {
         "handler": "bin/update",
@@ -782,7 +927,7 @@
         "timeout": 6,
         "runtime": "go1.x",
         "vpc": {},
-        "versionLogicalId": "UpdateLambdaVersionA31ogQLi4LD3un6i8ckN5cPuqDEmrxc4H3YEJYFQ"
+        "versionLogicalId": "UpdateLambdaVersion9U2BWmXO34ZU6WI44vMHVQAozqYvfI4WaY5sNpN24E"
       }
     },
     "configValidationMode": "warn",
@@ -801,7 +946,7 @@
         ],
         "artifactsS3KeyDirname": "serverless/jubla-crud-forms-go/dev/code-artifacts",
         "artifact": "/Users/marcogarofalocervantes/Documents/exercises/jubla-crud-forms-go/.serverless/jubla-crud-forms-go.zip",
-        "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z"
+        "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z"
       }
     },
     "layers": {},
@@ -809,7 +954,7 @@
     "artifact": "/Users/marcogarofalocervantes/Documents/exercises/jubla-crud-forms-go/.serverless/jubla-crud-forms-go.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653942835094-2022-05-30T20:33:55.094Z",
+    "artifactDirectoryName": "serverless/jubla-crud-forms-go/dev/1653943700626-2022-05-30T20:48:20.626Z",
     "artifact": "jubla-crud-forms-go.zip"
   }
 }

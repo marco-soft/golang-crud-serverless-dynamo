@@ -22,6 +22,12 @@ provider:
           Resource: "*"
 
 functions:
+  read:
+    handler: bin/read
+    events:
+      - httpApi:
+          path: /form
+          method: get
   create:
     handler: bin/create
     events:
