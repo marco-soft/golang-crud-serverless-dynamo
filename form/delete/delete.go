@@ -13,14 +13,17 @@ import (
 	"log"
 )
 
-type Response events.APIGatewayProxyResponse
+// aws config
+var region = "us-east-1"
+var formsTable = "jubla-forms-responses"
 
+// Form to receive, is map because is dynamic
 type Form map[string]interface{}
 
-func deleteItem(responseForm string) (*dynamodb.DeleteItemOutput, error) {
-
+// method to deleteItem a form item to dynamodb
+func deleteItem(item Form) (*dynamodb.DeleteItemOutput, error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO(), func(opts *config.LoadOptions) error {
-		opts.Region = "us-east-1"
+		opts.Region = region
 		return nil
 	})
 
@@ -31,38 +34,34 @@ func deleteItem(responseForm string) (*dynamodb.DeleteItemOutput, error) {
 	svc := dynamodb.NewFromConfig(cfg)
 
 	selectedKeys := map[string]string{
-		"form": responseForm,
-		"type": "2022-05-30T14:49:59.104317389Z",
+		"form": item["form"].(string),
+		"type": item["type"].(string),
 	}
 
 	key, err := attributevalue.MarshalMap(selectedKeys)
-
-	log.Printf("DYNAMODB KEY: %s", key)
-
-	//cond := expression.Equal(
-	//	expression.Name("anyIntField"),
-	//	expression.Value(1))
-
-	//expr, err := expression.NewBuilder().WithCondition(cond).Build()
+	if err != nil {
+		log.Printf("ERROR ON deleteItem METHOD: %s", err)
+		panic(err)
+	}
 
 	out, err := svc.DeleteItem(context.TODO(), &dynamodb.DeleteItemInput{
-		TableName: aws.String("jubla-forms-responses"),
+		TableName: aws.String(formsTable),
 		Key:       key,
-		//ExpressionAttributeNames:  expr.Names(),
-		//ExpressionAttributeValues: expr.Values(),
-		//ConditionExpression:       expr.Condition(),
 	})
 
 	if err != nil {
+		log.Printf("ERROR ON deleteItem METHOD: %s", err)
 		panic(err)
 	}
 
 	return out, nil
 }
 
+type Response events.APIGatewayProxyResponse
+
 func HandlerDelete(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 
-	ctx, seg := xray.BeginSubsegment(ctx, "MY-CUSTOM-SEGMENT")
+	ctx, seg := xray.BeginSubsegment(ctx, "DELETE-FORM-SEGMENT")
 	seg.AddMetadata("BODY", request.Body)
 
 	log.Printf("REQUEST BODY: %s", request.Body)
@@ -70,7 +69,8 @@ func HandlerDelete(ctx context.Context, request events.APIGatewayProxyRequest) (
 	var form Form
 	json.Unmarshal([]byte(request.Body), &form)
 
-	_, err := deleteItem(form["id"].(string))
+	out, err := deleteItem(form)
+	log.Printf("DELETE ITEM OUTPUT: %s", out)
 
 	if err != nil {
 		log.Fatalf("LoadDefaultConfig: %v\n", err)
