@@ -22,18 +22,26 @@ provider:
           Resource: "arn:aws:dynamodb:us-east-1:582589677455:table/jubla-forms-responses"
 
 functions:
+  read_structure:
+    handler: bin/read_structure
+    events:
+      - http:
+          path: structure/{id}
+          method: get
   read:
-    handler: bin/read
+    handler: bin/read_structure
     events:
       - httpApi:
           path: /form
           method: get
+          cors: true # <-- CORS!
   create:
     handler: bin/create
     events:
       - httpApi:
           path: /form
           method: post
+          cors: true # <-- CORS!
   delete:
     handler: bin/delete
     events:
