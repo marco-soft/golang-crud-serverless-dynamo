@@ -1,23 +1,76 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-xray-sdk-go/xray"
+	"github.com/grokify/go-awslambda"
+	"io"
 	"log"
+	"net/http"
+	"os"
+	"path/filepath"
 	"time"
 )
 
 // aws config
 var region = "us-east-1"
 var formsTable = "jubla-forms-responses"
+
+// Uploads a file to AWS S3 given an S3 session client, a bucket name and a file path
+func uploadFileToS3(
+	bucketName string,
+	filePath string,
+) error {
+	session, err := session.NewSession(&aws.Config{Region: aws.String(region)})
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err != nil {
+		log.Fatalf("could not initialize new aws session: %v", err)
+	}
+
+	// Initialize an s3 client from the session created
+	s3Client := s3.New(session)
+	// Get the fileName from Path
+	fileName := filepath.Base(filePath)
+
+	// Open the file from the file path
+	upFile, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("could not open local filepath [%v]: %+v", filePath, err)
+	}
+	defer upFile.Close()
+
+	// Get the file info
+	upFileInfo, _ := upFile.Stat()
+	var fileSize int64 = upFileInfo.Size()
+	fileBuffer := make([]byte, fileSize)
+	upFile.Read(fileBuffer)
+
+	// Put the file object to s3 with the file name
+	_, err = s3Client.PutObject(&s3.PutObjectInput{
+		Bucket:               aws.String(bucketName),
+		Key:                  aws.String(fileName),
+		ACL:                  aws.String("private"),
+		Body:                 bytes.NewReader(fileBuffer),
+		ContentLength:        aws.Int64(fileSize),
+		ContentType:          aws.String(http.DetectContentType(fileBuffer)),
+		ContentDisposition:   aws.String("attachment"),
+		ServerSideEncryption: aws.String("AES256"),
+	})
+	return err
+}
 
 // Form to receive, is map because is dynamic
 type Form map[string]interface{}
@@ -60,7 +113,23 @@ type Response events.APIGatewayProxyResponse
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Response, error) {
 
 	ctx, seg := xray.BeginSubsegment(ctx, "CREATE-FORM-SEGMENT")
+	r, err := awslambda.NewReaderMultipart(request)
 
+	if err != nil {
+		panic(err)
+	}
+	part, err := r.NextPart()
+	if err != nil {
+		panic(err)
+	}
+	content, err := io.ReadAll(part)
+	if err != nil {
+		panic(err)
+	}
+
+	filename := extractFile(request)
+
+	uploadFileToS3("", filename)
 	seg.AddMetadata("BODY", request.Body)
 	log.Printf("REQUEST BODY: %s", request.Body)
 
