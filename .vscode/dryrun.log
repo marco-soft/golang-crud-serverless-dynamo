@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/Users/marcogarofalocervantes/Documents/JUBLA/serverless/golang-crud-serverless-dynamo'
+env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/read form/read/read.go
+env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/create form/create/create.go
+env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/update form/update/update.go
+env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/delete form/delete/delete.go
+env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/read_structure structure/read_structure/read_structure.go
+make: Leaving directory '/Users/marcogarofalocervantes/Documents/JUBLA/serverless/golang-crud-serverless-dynamo'
+ 

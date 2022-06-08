@@ -1,6 +1,6 @@
 module github.com/aws/aws-lambda-go/events
 
-go 1.18
+go 1.17
 
 require (
 	github.com/aws/aws-lambda-go v1.32.0
@@ -11,6 +11,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/dynamodb/expression v1.4.8
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.15.5
 	github.com/aws/aws-xray-sdk-go v1.7.0
+	github.com/grokify/go-awslambda v0.1.6
 )
 
 require (
@@ -28,7 +29,6 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.16.6 // indirect
 	github.com/aws/smithy-go v1.11.2 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
-	github.com/grokify/go-awslambda v0.1.6 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/klauspost/compress v1.15.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect

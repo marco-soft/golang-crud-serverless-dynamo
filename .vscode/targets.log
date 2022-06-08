@@ -1,0 +1,276 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.3
+# Built for arm-apple-darwin21.1.0
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Tue Jun  7 19:06:27 2022
+
+# Variables
+
+# environment
+LC_ALL = C
+# environment
+TMPDIR = /var/folders/z7/7rlvyz4j6f75l8_cqxx96lcm0000gn/T/
+# environment
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.19363423.19363430
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/z7/7rlvyz4j6f75l8_cqxx96lcm0000gn/T/vscode-ipc-30c3a125-ecb4-45a1-9410-c26437151e6b.sock
+# environment
+VSCODE_CWD = /
+# environment
+NVM_DIR = /Users/marcogarofalocervantes/.nvm
+# default
+MAKE_COMMAND := make
+# environment
+GOPATH = /Users/marcogarofalocervantes/go
+# environment
+__CFBundleIdentifier = com.microsoft.VSCode
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+CLOUDFLARE_AUTH_EMAIL = marco.garofalo.c95@gmail.com
+# environment
+BITGOWWW_HOST_USERBASE = localhost
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+COMMAND_MODE = unix2003
+# environment
+PWD = /Users/marcogarofalocervantes/Documents/JUBLA/serverless/golang-crud-serverless-dynamo
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+VSCODE_LOG_STACK = false
+# automatic
+%F = $(notdir $%)
+# environment
+NVM_INC = /Users/marcogarofalocervantes/.nvm/versions/node/v17.4.0/include/node
+# environment
+VSCODE_CODE_CACHE_PATH = /Users/marcogarofalocervantes/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+# environment
+LANG = C
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /opt/homebrew/Cellar/make/4.3/include /usr/local/include
+# environment
+__CF_USER_TEXT_ENCODING = 0x1F5:0x0:0x0
+# makefile
+MAKEFLAGS = pqrR
+# makefile
+CURDIR := /Users/marcogarofalocervantes/Documents/JUBLA/serverless/golang-crud-serverless-dynamo
+# environment
+VSCODE_PIPE_LOGGING = true
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /Users/marcogarofalocervantes/.gnupg/S.gpg-agent.ssh
+# default
+.SHELLFLAGS := -c
+# environment
+NVM_BIN = /Users/marcogarofalocervantes/.nvm/versions/node/v17.4.0/bin
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_VERBOSE_LOGGING = true
+# environment
+VSCODE_PID = 484
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# makefile (from 'Makefile', line 1)
+go_apps = bin/read bin/create bin/update bin/delete bin/read_structure
+# automatic
+*F = $(notdir $*)
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+CLOUDFLARE_AUTH_KEY = 800f5a9db8d17961f0994870dd189e87490a2
+# default
+MAKE_HOST := arm-apple-darwin21.1.0
+# makefile
+SHELL = /bin/sh
+# default
+MAKECMDGOALS := all
+# environment
+SHLVL = 1
+# environment
+MAKELEVEL := 0
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+LaunchInstanceID = B37FA988-4989-48E0-A5F8-9B701CE7FDCB
+# environment
+PATH = /opt/homebrew/opt/make/libexec/gnubin:/Users/marcogarofalocervantes/.nvm/versions/node/v17.4.0/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Apple/usr/bin:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/marcogarofalocervantes/.epirus:/Users/marcogarofalocervantes/development/flutter/bin:/Users/marcogarofalocervantes/.pub-cache/bin
+# default
+MAKEFILES := 
+# automatic
+^F = $(notdir $^)
+# environment
+VSCODE_LOG_NATIVE = false
+# automatic
+?F = $(notdir $?)
+# environment
+SECURITYSESSIONID = 186a6
+# automatic
++F = $(notdir $+)
+# environment
+bga = /Users/marcogarofalocervantes/Documents/SimTLix/bitgo-admin/bin/bgadmin
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = undefined
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+LOGNAME = marcogarofalocervantes
+# environment
+XPC_FLAGS = 0x0
+# makefile
+.DEFAULT_GOAL := build
+# environment
+USER = marcogarofalocervantes
+# default
+MAKE_VERSION := 4.3
+# environment
+_ = /opt/homebrew/opt/make/libexec/gnubin/make
+# environment
+NVM_CD_FLAGS = -q
+# environment
+GOMODCACHE = /Users/marcogarofalocervantes/go/pkg/mod
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /Users/marcogarofalocervantes
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /Users/marcogarofalocervantes/Library/Application Support/Code/1.67.2-main.sock
+# environment
+GOPROXY = https://proxy.golang.org,direct
+# default
+.RECIPEPREFIX := 
+# environment
+BITGOWWW_SEED_PATH = /Users/marcogarofalocervantes/Documents/SimTLix/bitgo-microservices/packages/wallet-platform-init
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
+# variable set hash-table stats:
+# Load=81/1024=8%, Rehash=0, Collisions=5/110=5%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777231, inode 20167087): 16 files, no impossibilities.
+# form/*: could not be stat'd.
+# structure/*: could not be stat'd.
+
+# 16 files, no impossibilities in 3 directories.
+
+# Implicit Rules
+
+bin/%: form/*/%.go
+#  recipe to execute (from 'Makefile', line 4):
+		env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o $@ $<
+
+bin/%: structure/*/%.go
+#  recipe to execute (from 'Makefile', line 7):
+		env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o $@ $<
+
+# 2 implicit rules, 0 (0.0%) terminal.
+# Files
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-05 19:16:11.607156693
+#  File has been updated.
+#  Successfully updated.
+
+# Not a target:
+bin/create:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+bin/read:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+build: bin/read bin/create bin/update bin/delete bin/read_structure
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+bin/delete:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+bin/read_structure:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+bin/update:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=10/1024=1%, Rehash=0, Collisions=0/25=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 32 / storage = 325 B / avg = 10 B
+# current buf: size = 8162 B / used = 325 B / count = 32 / avg = 10 B
+
+# strcache performance: lookups = 37 / hit rate = 13%
+# hash-table stats:
+# Load=32/8192=0%, Rehash=0, Collisions=0/37=0%
+# Finished Make data base on Tue Jun  7 19:06:27 2022
+
+ 

@@ -3,6 +3,9 @@ service: jubla-crud-forms-go
 provider:
   name: aws
   runtime: go1.x
+  apiGateway:
+    binaryMediaType:
+      - "multipart/form-data"
   tracing:
     apiGateway: true
     lambda: true
@@ -20,6 +23,13 @@ provider:
             - xray:PutTraceSegments
             - xray:PutTelemetryRecords
           Resource: "arn:aws:dynamodb:us-east-1:582589677455:table/jubla-forms-responses"
+        - Effect: Allow
+          Action:
+            - s3:Put*
+            - s3:Get*
+            - s3:List*
+            - s3:Delete*
+          Resource: "*"
 
 functions:
   read_structure:
